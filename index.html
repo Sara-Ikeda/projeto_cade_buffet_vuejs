@@ -3,14 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cade Buffet</title>
+  <title>Buffet</title>
 </head>
 <body>
-  
+  <div id="app">
+    <h1>Cade Buffet?</h1>
 
+    <div v-if="listBuffets.length <= 0">
+      <p>Não há Buffets disponíveis no momento.</p>
+    </div>
+    
+    <dl v-for="b in listBuffets">
+      <dt><strong>{{ b.trade_name }}</strong></dt>
+      <dd>{{ b.contact }}</dd>
+    </dl>
 
-
-
+  </div>
 
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script src="main.js"></script>
