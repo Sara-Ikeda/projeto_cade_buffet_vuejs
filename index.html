@@ -6,17 +6,49 @@
   <title>Buffet</title>
 </head>
 <body>
-  <div id="app">
-    <h1>Cade Buffet?</h1>
+  <h1>Cadê Buffet?</h1>
 
-    <div v-if="listBuffets.length <= 0">
-      <p>Não há Buffets disponíveis no momento.</p>
-    </div>
-    
-    <dl v-for="b in listBuffets">
-      <dt><strong>{{ b.trade_name }}</strong></dt>
-      <dd>{{ b.contact }}</dd>
-    </dl>
+  <div id="app">
+
+    <section v-show="showBuffets">
+      <div v-if="listBuffets.length <= 0">
+        <p>Não há Buffets disponíveis no momento.</p>
+      </div>
+      <div v-else v-for="b, id in listBuffets">
+        <h2>{{ b.trade_name }}</h2>
+        <address>
+          {{ b.contact }}
+          <button v-on:click="getBuffetInfo(id)">Ver Detalhes</button>
+        </address>
+      </div>
+    </section>
+
+
+    <section v-if="buffetInfo.length != []">
+      <h2>{{ buffetInfo.trade_name }}</h2>
+      {{buffetInfo.description }}
+      <br>Formas de pagamento: {{buffetInfo.payment_types }}
+      <br>Endereço: {{buffetInfo.address }}
+
+      <div v-if="buffetEvents.length <= 0">
+        <p>Não há tipos de eventos cadastrados no momento.</p>
+      </div>
+      <div v-else>
+        <h3>Tipos de Eventos</h3>
+        <ul v-for="event in buffetEvents">
+          <strong>{{ event.name }}</strong>
+          <br><i>{{ event.description }}</i>
+          <li>Mínimo de convidados: {{ event.minimum_of_people }}</li>
+          <li>Máximo de convidados: {{ event.maximum_of_people }}</li>
+          <li>Duração padrão: {{ event.duration }}</li>
+          <li>Cardápio: {{ event.menu }}</li>
+          <li>Local: {{ event.locality }}</li>
+          <li>Serviços extras: {{ event.extra_services }}</li>
+        </ul>
+      </div>
+
+      <button v-on:click="rootPath()">Voltar</button>
+    </section>
 
   </div>
 
