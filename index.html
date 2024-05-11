@@ -11,10 +11,12 @@
   <div id="app">
 
     <section v-show="showBuffets">
-      <div v-if="listBuffets.length <= 0">
-        <p>Não há Buffets disponíveis no momento.</p>
+      <input type="text" v-model="searchBuffet" placeholder="Buscar Buffet">
+
+      <div v-if="buffets.length <= 0">
+        <p>Nenhum Buffet encontrado.</p>
       </div>
-      <div v-else v-for="b, id in listBuffets">
+      <div v-else v-for="b, id in buffets">
         <h2>{{ b.trade_name }}</h2>
         <address>
           {{ b.contact }}
@@ -26,9 +28,11 @@
 
     <section v-if="buffetInfo.length != []">
       <h2>{{ buffetInfo.trade_name }}</h2>
-      {{buffetInfo.description }}
-      <br>Formas de pagamento: {{buffetInfo.payment_types }}
-      <br>Endereço: {{buffetInfo.address }}
+      <address>{{buffetInfo.description }}</address>
+      <p>
+        Formas de pagamento: {{buffetInfo.payment_types }}<br>
+        Endereço: {{buffetInfo.address }}
+      </p>
 
       <div v-if="buffetEvents.length <= 0">
         <p>Não há tipos de eventos cadastrados no momento.</p>

@@ -2,6 +2,7 @@ const app = Vue.createApp({
   data(){
     return{
       showBuffets: true,
+      searchBuffet: '',
       listBuffets: [],
       buffetInfo: [],
       buffetEvents:[]
@@ -9,7 +10,7 @@ const app = Vue.createApp({
   },
 
   async mounted(){
-    await this.getBuffets();
+    this.buffets = await this.getBuffets();
   },
 
   methods:{
@@ -86,7 +87,15 @@ const app = Vue.createApp({
   },
 
   computed:{
-
+    buffets(){
+      if(this.searchBuffet){
+        return this.listBuffets.filter(buffet => {
+          return buffet.trade_name.toLowerCase().includes(this.searchBuffet.toLowerCase())
+        });
+      }else{
+        return this.listBuffets;
+      }
+    }
   }
 
 })
