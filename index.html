@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
   <title>Buffet</title>
 </head>
 <body>
@@ -11,37 +12,35 @@
   <div id="app">
 
     <section v-show="showBuffets">
-      <input type="search" v-model="searchBuffet" placeholder="Buscar Buffet">
+      <input class="search" type="search" v-model="searchBuffet" placeholder="Buscar Buffet"><br>
 
       <div v-if="buffets.length <= 0">
-        <p>Nenhum Buffet encontrado.</p>
+        <p class="text_sty2">Nenhum Buffet encontrado.</p>
       </div>
-      <div v-else v-for="b, id in buffets">
+      <div id="buffets" v-else v-for="b, id in buffets">
         <h2>{{ b.trade_name }}</h2>
-        <address>
-          {{ b.contact }}
-          <button v-on:click="getBuffetInfo(id)">Ver Detalhes</button>
-        </address>
+        <address>{{ b.contact }}</address>
+        <button v-on:click="getBuffetInfo(id)">Ver Detalhes</button>
       </div>
     </section>
 
 
     <section v-if="buffetInfo.length != []">
-      <h2>{{ buffetInfo.trade_name }}</h2>
-      <address>{{buffetInfo.description }}</address>
-      <p>
-        Formas de pagamento: {{buffetInfo.payment_types }}<br>
-        Endereço: {{buffetInfo.address }}
-      </p>
+      <h2 class="text_sty1">{{ buffetInfo.trade_name }}</h2>
+      <address class="text_sty2">{{buffetInfo.description }}</address>
+      <div id="buffet_info">
+        <strong>Endereço:</strong> {{buffetInfo.address }} <br>
+        <strong>Formas de pagamento:</strong> {{buffetInfo.payment_types }}
+      </div>
 
       <div v-if="buffetEvents.length <= 0">
-        <p>Não há tipos de eventos cadastrados no momento.</p>
+        <p class="text_sty2">Não há tipos de eventos cadastrados no momento.</p>
       </div>
       <div v-else>
-        <h3>Tipos de Eventos</h3>
-        <ul v-for="event, index in buffetEvents">
-          <strong>{{ event.name }}</strong>
-          <br><i>{{ event.description }}</i>
+        <h3 class="text_sty3">TIPOS DE EVENTOS</h3>
+        <ul id="events" v-for="event, index in buffetEvents">
+          <h3>{{ event.name }}</h3>
+          <address>{{ event.description }}</address>
           <li>Mínimo de convidados: {{ event.minimum_of_people }}</li>
           <li>Máximo de convidados: {{ event.maximum_of_people }}</li>
           <li>Duração padrão: {{ event.duration }}</li>
@@ -50,25 +49,27 @@
           <li>Serviços extras: {{ event.extra_services }}</li>
         </ul>
 
-        <section>
+        <section id="queryForm">
           <h3>Consultar disponibilidade de data para realização de evento:</h3>
           <form v-on:submit.prevent="calculate_standard_value()">
-            <div>
-              <label for="eventQuery">Escolha um Tipo de Evento:</label>
-              <select type="" id="eventQuery" v-model="selectedEventIdQuery" required>
-                <option v-for="event, index in buffetEvents" :value="index">
-                  {{ event.name }}
-                </option>
-              </select>
-            </div>
-            <div>
-              <label for="date">Data do evento:</label>
-              <input type="date" id="date" v-model="dateQuery" min="new Date()" required>
-            </div>
-            <div>
-              <label for="number_of_guests">Número de convidados:</label>
-              <input type="number" id="number_of_guests" v-model="quantityQuery" min="1" required>
-            </div>
+            <table>
+              <tr>
+                <td><label for="eventQuery">Escolha um Tipo de Evento:</label></td>
+                <td><select class="form_inputs" type="" id="eventQuery" v-model="selectedEventIdQuery" required>
+                  <option v-for="event, index in buffetEvents" :value="index">
+                    {{ event.name }}
+                  </option>
+                </select></td>
+              </tr>
+              <tr>
+                <td><label for="date">Data do evento:</label></td>
+                <td><input class="form_inputs" type="date" id="date" v-model="dateQuery" min="new Date()" required></td>
+              </tr>
+              <tr>
+                <td><label for="number_of_guests">Número de convidados:</label></td>
+                <td><input class="form_inputs" type="number" id="number_of_guests" v-model="quantityQuery" min="1" required></td>
+              </tr>
+            </table>
             <button type="submit">Consultar</button>
           </form>
           <div v-if="resultQuery.standard_value">
