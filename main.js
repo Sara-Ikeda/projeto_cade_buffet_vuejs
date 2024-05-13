@@ -5,7 +5,11 @@ const app = Vue.createApp({
       searchBuffet: '',
       listBuffets: [],
       buffetInfo: [],
-      buffetEvents:[]
+      buffetEvents:[],
+      selectedEventIdQuery: '',
+      dateQuery: '',
+      quantityQuery: '',
+      resultQuery: 0
     }
   },
 
@@ -15,18 +19,31 @@ const app = Vue.createApp({
 
   methods:{
     rootPath(){
-      this.buffetInfo = [];
       this.buffetEvents = [];
+      this.buffetInfo = [];
+      this.selectedEventIdQuery = '';
+      this.dateQuery = '';
+      this.quantityQuery = '';
+      this.resultQuery = 0;
       this.showBuffets = true;
+    },
+
+    async calculate_standard_value(){
+      let eventIdQuery = this.buffetEvents[this.selectedEventIdQuery].id;
+      let buffetIdQuery =  this.buffetInfo.id;
+      
+      this.resultQuery = await fetch(`http://localhost:3000/api/v1/buffets/${
+        buffetIdQuery}/events/${eventIdQuery}/query?date=${this.dateQuery
+        }&number_of_guests=${this.quantityQuery}`).then(response => response.json());
     },
 
     async getBuffets(){
       this.listBuffets = [];
 
-      let data = await fetch('http://localhost:3000/api/v1/buffets/'
+      let buffets_data = await fetch('http://localhost:3000/api/v1/buffets/'
         ).then(response => response.json());
 
-      data.forEach(item => {
+      buffets_data.forEach(item => {
         var buffet = new Object();
         buffet.trade_name = item.trade_name;
         buffet.contact = item.contact;
@@ -37,26 +54,26 @@ const app = Vue.createApp({
 
     async getBuffetInfo(id){
       this.showBuffets = false;
-      this.buffetInfo = [];
-      this.buffetEvents = [];
 
-      let data = await fetch(`http://localhost:3000/api/v1/buffets/${id+1}`
+      let b_info_data = await fetch(`http://localhost:3000/api/v1/buffets/${id+1}`
         ).then(response => response.json());
       var infos = new Object();
-      infos.trade_name = data.trade_name;
-      infos.description = data.description;
-      infos.payment_types = data.payment_types;
-      infos.address = data.address.street + ` , nº ` + data.address.number +
-                      `. ` + data.address.city + `/` + data.address.state +
-                      ` - CEP: ` + data.address.zip;
+      infos.id = b_info_data.id;
+      infos.trade_name = b_info_data.trade_name;
+      infos.description = b_info_data.description;
+      infos.payment_types = b_info_data.payment_types;
+      infos.address = b_info_data.address.street + ` , nº ` + b_info_data.address.number +
+                      `. ` + b_info_data.address.city + `/` + b_info_data.address.state +
+                      ` - CEP: ` + b_info_data.address.zip;
 
       this.buffetInfo = infos;
       
-      let other_data = await fetch(`http://localhost:3000/api/v1/buffets/${id+1}/events`
+      let events_data = await fetch(`http://localhost:3000/api/v1/buffets/${id+1}/events`
       ).then(response => response.json())
 
-      other_data.forEach(item => {
+      events_data.forEach(item => {
         var event = new Object();
+        event.id = item.id;
         event.name = item.name;
         event.description = item.event_description;
         event.minimum_of_people = item.minimum_of_people;
@@ -81,7 +98,6 @@ const app = Vue.createApp({
 
         this.buffetEvents.push(event);
       });
-    
     }
 
   },

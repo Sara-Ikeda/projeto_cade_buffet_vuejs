@@ -11,7 +11,7 @@
   <div id="app">
 
     <section v-show="showBuffets">
-      <input type="text" v-model="searchBuffet" placeholder="Buscar Buffet">
+      <input type="search" v-model="searchBuffet" placeholder="Buscar Buffet">
 
       <div v-if="buffets.length <= 0">
         <p>Nenhum Buffet encontrado.</p>
@@ -39,7 +39,7 @@
       </div>
       <div v-else>
         <h3>Tipos de Eventos</h3>
-        <ul v-for="event in buffetEvents">
+        <ul v-for="event, index in buffetEvents">
           <strong>{{ event.name }}</strong>
           <br><i>{{ event.description }}</i>
           <li>Mínimo de convidados: {{ event.minimum_of_people }}</li>
@@ -49,6 +49,36 @@
           <li>Local: {{ event.locality }}</li>
           <li>Serviços extras: {{ event.extra_services }}</li>
         </ul>
+
+        <section>
+          <h3>Consultar disponibilidade de data para realização de evento:</h3>
+          <form v-on:submit.prevent="calculate_standard_value()">
+            <div>
+              <label for="eventQuery">Escolha um Tipo de Evento:</label>
+              <select type="" id="eventQuery" v-model="selectedEventIdQuery" required>
+                <option v-for="event, index in buffetEvents" :value="index">
+                  {{ event.name }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <label for="date">Data do evento:</label>
+              <input type="date" id="date" v-model="dateQuery" min="new Date()" required>
+            </div>
+            <div>
+              <label for="number_of_guests">Número de convidados:</label>
+              <input type="number" id="number_of_guests" v-model="quantityQuery" min="1" required>
+            </div>
+            <button type="submit">Consultar</button>
+          </form>
+          <div v-if="resultQuery.standard_value">
+            <strong>Valor padrão: {{ resultQuery.standard_value }} </strong>
+          </div>
+          <div v-else>
+            <strong>{{ resultQuery.error }} </strong>
+          </div>
+
+        </section>
       </div>
 
       <button v-on:click="rootPath()">Voltar</button>
